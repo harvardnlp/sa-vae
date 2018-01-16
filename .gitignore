@@ -1,0 +1,16 @@
+*.pt
+*.amat
+*.out
+*.pyc
+*.pt~
+.gitignore~
+*.out~
+*.sh
+*.sh~
+*.py~
+*.json
+*.json~
+*.model
+*.h5
+*.tar.gz
+*.hdf5
