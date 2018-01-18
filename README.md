@@ -15,13 +15,16 @@ Please cite the original papers when using the data.
 ## Text
 After downloading the data, run
 ```
-python preprocess_text.py --trainfile data/yahoo/train.txt --valfile data/yahoo/val.txt --outputfile data/yahoo/test.txt --outputfile data/yahoo/yahoo
+python preprocess_text.py --trainfile data/yahoo/train.txt --valfile data/yahoo/val.txt
+--testfile data/yahoo/test.txt --outputfile data/yahoo/yahoo
 ```
-This will create the `hdf5` files (data tensors) to be used by the model.
+This will create the `*.hdf5` files (data tensors) to be used by the model, as well as the `*.dict`
+file which contains the word-to-integer mapping for each word.
 
 The basic model command is
 ```
-python train_text.py --train_file data/yahoo/yahoo-train.hdf5 --val_file data/yahoo/yahoo-val.hdf5 --gpu 1 --checkpoint_path model-path
+python train_text.py --train_file data/yahoo/yahoo-train.hdf5 --val_file data/yahoo/yahoo-val.hdf5
+--gpu 1 --checkpoint_path model-path
 ```
 where `model-path` is the path to save the best model and the `*.hdf5` files are obtained from running `preprocess_text.py`. You can specify which GPU to use by changing the input to the `--gpu` command.
 
@@ -53,7 +56,7 @@ python train_img.py --data_file data/omniglot/omniglot.pt --gpu 1 --checkpoint_p
 ```
 
 To train the various models, add the following:  
-- Autoregressive (i.e. language model): `--model autoreg`  
+- Autoregressive (i.e. Gated PixelCNN): `--model autoreg`  
 - VAE: `--model vae`  
 - SVI: `--model svi --svi_steps 20 --acc_param_grads 0`  
 - SAVI-VAE: `--model savi --svi_steps 20 --train_n2n 0 --train_kl 0 --acc_param_grads 0`    
@@ -66,7 +69,7 @@ python train_img.py --train_from model-path --test 1 --gpu 1
 ```
 
 ## Acknowledgements
-Some of our image code is based on (VAE with a VampPrior)[https://github.com/jmtomczak/vae_vampprior] repo.
+Some of our image code is based on [VAE with a VampPrior](https://github.com/jmtomczak/vae_vampprior).
 
 ## License
 MIT
