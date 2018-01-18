@@ -28,7 +28,7 @@ import torch.utils.data
 parser = argparse.ArgumentParser()
 
 # Input data
-parser.add_argument('--data_file', default='../vae-svi/data/omniglot/omniglot.pt')
+parser.add_argument('--data_file', default='data/omniglot/omniglot.pt')
 parser.add_argument('--train_from', default='')
 parser.add_argument('--checkpoint_path', default='baseline.pt')
 
@@ -40,6 +40,9 @@ parser.add_argument('--dec_kernel_size', default=[9,9,9,7,7,7,5,5,5,3,3,3], type
 parser.add_argument('--dec_layers', default=[32,32,32,32,32,32,32,32,32,32,32,32])
 parser.add_argument('--latent_feature_map', default=4, type=int)
 parser.add_argument('--model', default='savi', type=str, choices = ['vae', 'autoreg', 'savi', 'svi'])
+parser.add_argument('--train_kl', default=1, type=int)
+parser.add_argument('--train_n2n', default=1, type=int)
+parser.add_argument('--acc_param_grads', default=1, type=int)
 
 # Optimization options
 parser.add_argument('--num_epochs', default=100, type=int)
@@ -47,10 +50,7 @@ parser.add_argument('--svi_steps', default=20, type=int)
 parser.add_argument('--svi_lr1', default=1, type=float)
 parser.add_argument('--svi_lr2', default=1, type=float)
 parser.add_argument('--eps', default=1e-5, type=float)
-parser.add_argument('--train_kl', default=1, type=int)
-parser.add_argument('--train_n2n', default=1, type=int)
 parser.add_argument('--momentum', default=0.5, type=float)
-parser.add_argument('--acc_param_grads', default=1, type=int)
 parser.add_argument('--warmup', default=10., type=int)
 parser.add_argument('--lr', default=1e-3, type=float)
 parser.add_argument('--max_grad_norm', default=5, type=float)
@@ -60,6 +60,7 @@ parser.add_argument('--slurm', default=0, type=int)
 parser.add_argument('--batch_size', default=50, type=int)
 parser.add_argument('--seed', default=3435, type=int)
 parser.add_argument('--print_every', type=int, default=500)
+parser.add_argument('--test', type=int, default=0)
     
 def main(args):
   np.random.seed(args.seed)
@@ -102,6 +103,10 @@ def main(args):
   model.cuda()
   model.train()
 
+  if args.test == 1:
+    eval(test_loader, model, meta_optimizer)
+    exit()
+    
   def variational_loss(input, img, model, z = None):
     mean, logvar = input
     z_samples = model._reparameterize(mean, logvar, z)      

@@ -27,8 +27,9 @@ import utils
 parser = argparse.ArgumentParser()
 
 # Input data
-parser.add_argument('--train_file', default='../vae-svi/data/yahoo/yahoo-clean-train.hdf5')
-parser.add_argument('--val_file', default='../vae-svi/data/yahoo/yahoo-clean-val.hdf5')
+parser.add_argument('--train_file', default='data/yahoo/yahoo-train.hdf5')
+parser.add_argument('--val_file', default='data/yahoo/yahoo-val.hdf5')
+parser.add_argument('--test_file', default='data/yahoo/yahoo-test.hdf5')
 parser.add_argument('--train_from', default='')
 
 # Model options
@@ -41,6 +42,9 @@ parser.add_argument('--dec_h_dim', default=1024, type=int)
 parser.add_argument('--dec_num_layers', default=1, type=int)
 parser.add_argument('--dec_dropout', default=0.5, type=float)
 parser.add_argument('--model', default='savi', type=str, choices = ['vae', 'autoreg', 'savi', 'svi'])
+parser.add_argument('--train_n2n', default=1, type=int)
+parser.add_argument('--train_kl', default=1, type=int)
+parser.add_argument('--acc_param_grads', default=1, type=int)
 
 # Optimization options
 parser.add_argument('--checkpoint_path', default='baseline.pt')
@@ -49,30 +53,25 @@ parser.add_argument('--warmup', default=10, type=int)
 parser.add_argument('--num_epochs', default=30, type=int)
 parser.add_argument('--min_epochs', default=15, type=int)
 parser.add_argument('--start_epoch', default=0, type=int)
-parser.add_argument('--train_kl', default=1, type=int)
 parser.add_argument('--svi_steps', default=20, type=int)
 parser.add_argument('--svi_lr1', default=1, type=float)
 parser.add_argument('--svi_lr2', default=1, type=float)
 parser.add_argument('--eps', default=1e-5, type=float)
-parser.add_argument('--train_n2n', default=1, type=int)
 parser.add_argument('--decay', default=0, type=int)
 parser.add_argument('--momentum', default=0.5, type=float)
-parser.add_argument('--acc_param_grads', default=1, type=int)
-parser.add_argument('--kl_penalty', default=1., type=float)
 parser.add_argument('--lr', default=1, type=float)
 parser.add_argument('--max_grad_norm', default=5, type=float)
 parser.add_argument('--svi_max_grad_norm', default=5, type=float)
 parser.add_argument('--gpu', default=2, type=int)
 parser.add_argument('--seed', default=3435, type=int)
 parser.add_argument('--print_every', type=int, default=100)
-
+parser.add_argument('--test', type=int, default=0)
 
 def main(args):
   np.random.seed(args.seed)
   torch.manual_seed(args.seed)
   train_data = Dataset(args.train_file)
   val_data = Dataset(args.val_file)
-  
   train_sents = train_data.batch_size.sum()
   vocab_size = int(train_data.vocab_size)
   print('Train data: %d batches' % len(train_data))
@@ -126,12 +125,16 @@ def main(args):
                             lr = [args.svi_lr1, args.svi_lr2],
                             iters = args.svi_steps, momentum = args.momentum,
                             acc_param_grads= args.acc_param_grads == 1,  
-                            max_grad_norm = args.svi_max_grad_norm)      
+                            max_grad_norm = args.svi_max_grad_norm)
+  if args.test == 1:
+    test_data = Dataset(args.test_file)    
+    eval(test_data, model, meta_optimizer)
+    exit()
+    
   t = 0
   best_val_nll = 1e5
   best_epoch = 0
   val_stats = []
-
   epoch = 0
   while epoch < args.num_epochs:
     start_time = time.time()

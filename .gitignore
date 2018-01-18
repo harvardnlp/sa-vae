@@ -1,6 +1,8 @@
 *.pt
 *.amat
+*.mat
 *.out
+*.out~
 *.pyc
 *.pt~
 .gitignore~
@@ -14,3 +16,4 @@
 *.h5
 *.tar.gz
 *.hdf5
+*.txt
