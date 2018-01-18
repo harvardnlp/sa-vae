@@ -17,3 +17,4 @@
 *.tar.gz
 *.hdf5
 *.txt
+*.dict
