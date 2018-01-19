@@ -102,10 +102,6 @@ def main(args):
   
   model.cuda()
   model.train()
-
-  if args.test == 1:
-    eval(test_loader, model, meta_optimizer)
-    exit()
     
   def variational_loss(input, img, model, z = None):
     mean, logvar = input
@@ -120,7 +116,7 @@ def main(args):
                             lr = [args.svi_lr1, args.svi_lr2],
                             iters = args.svi_steps, momentum = args.momentum,
                             acc_param_grads= args.acc_param_grads == 1,  
-                            max_grad_norm = args.svi_max_grad_norm)    
+                            max_grad_norm = args.svi_max_grad_norm)
   epoch = 0
   t = 0
   best_val_nll = 1e5
@@ -130,6 +126,12 @@ def main(args):
     args.beta = 1.
   else:
     args.beta = 0.1
+
+  if args.test == 1:
+    args.beta = 1
+    eval(test_loader, model, meta_optimizer)
+    exit()  
+    
   while epoch < args.num_epochs:
     start_time = time.time()
     epoch += 1

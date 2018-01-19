@@ -127,6 +127,7 @@ def main(args):
                             acc_param_grads= args.acc_param_grads == 1,  
                             max_grad_norm = args.svi_max_grad_norm)
   if args.test == 1:
+    args.beta = 1
     test_data = Dataset(args.test_file)    
     eval(test_data, model, meta_optimizer)
     exit()
