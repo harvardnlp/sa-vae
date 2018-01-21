@@ -214,8 +214,10 @@ def main(args):
               train_kl_init_final += kl_init_final.data[0]*batch_size
               kl_init_final.backward(retain_graph = True)              
             else:
-              vae_loss = nll_vae + args.beta*kl_vae          
-              vae_loss.backward(retain_graph = True)              
+              vae_loss = nll_vae + args.beta*kl_vae
+              var_param_grads = torch.autograd.grad(vae_loss, [mean, logvar], retain_graph=True)
+              var_param_grads = torch.cat(var_param_grads, 1)
+              var_params.backward(var_param_grads, retain_graph=True)              
           else:
             var_param_grads = meta_optimizer.backward([mean_svi_final.grad, logvar_svi_final.grad],
                                                       b % args.print_every == 0)
@@ -307,7 +309,6 @@ def eval(data, model, meta_optimizer):
       kl_vae = utils.kl_loss_diag(mean, logvar)
       total_kl_vae += kl_vae.data[0]*batch_size        
       if args.model == 'savi':
-        var_params = torch.cat([mean, logvar], 1)        
         mean_svi = Variable(mean.data, requires_grad = True)
         logvar_svi = Variable(logvar.data, requires_grad = True)
         var_params_svi = meta_optimizer.forward([mean_svi, logvar_svi], sents)

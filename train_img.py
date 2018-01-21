@@ -205,8 +205,10 @@ def main(args):
               kl_init_final = utils.kl_loss(mean, logvar, mean_final, logvar_final)
               kl_init_final.backward(retain_graph = True)              
             else:
-              vae_loss = nll_vae + args.beta*kl_vae          
-              vae_loss.backward(retain_graph = True)              
+              vae_loss = nll_vae + args.beta*kl_vae
+              var_param_grads = torch.autograd.grad(vae_loss, [mean, logvar], retain_graph=True)
+              var_param_grads = torch.cat(var_param_grads, 1)
+              var_params.backward(var_param_grads, retain_graph=True)
           else:
             var_param_grads = meta_optimizer.backward([mean_svi_final.grad, logvar_svi_final.grad],
                                                       t % args.print_every == 0)

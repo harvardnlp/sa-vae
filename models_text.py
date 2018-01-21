@@ -92,4 +92,5 @@ class RNNVAE(nn.Module):
       self.word_vecs.size(0)*self.word_vecs.size(1), -1)).view(
         self.word_vecs.size(0), self.word_vecs.size(1), -1)
     return preds
-                   
+
+  

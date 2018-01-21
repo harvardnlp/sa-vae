@@ -18,3 +18,5 @@
 *.hdf5
 *.txt
 *.dict
+*toy*
+*.pkl

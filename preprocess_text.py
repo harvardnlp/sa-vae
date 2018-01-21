@@ -170,7 +170,7 @@ def get_data(args):
                          args.outputfile + "-val.hdf5", num_sents_valid,
                          max_sent_l, args.shuffle)
     max_sent_l = convert(args.testfile, args.batchsize, args.seqlength,
-                         args.outputfile + "-test.hdf5", num_sents_valid,
+                         args.outputfile + "-test.hdf5", num_sents_test,
                          max_sent_l, args.shuffle)
     max_sent_l = convert(args.trainfile, args.batchsize, args.seqlength,
                          args.outputfile + "-train.hdf5", num_sents_train,
