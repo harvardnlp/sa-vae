@@ -18,13 +18,12 @@ import numpy as np
 
 class OptimN2N:
   def __init__(self, loss_fn, model, model_update_params,
-               lr=[0.2],
-               iters=10,
+               lr=[1],
+               iters=20,
                acc_param_grads=True,
                max_grad_norm = 0,
                eps = 0.00001,
-               momentum=0.75,
-               num_inputs = 2):
+               momentum=0.5):
        
     self.iters = iters
     self.lr = lr

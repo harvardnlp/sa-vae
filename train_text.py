@@ -257,13 +257,13 @@ def main(args):
       torch.save(checkpoint, args.checkpoint_path)
       model.cuda()
     else:
-      if epoch > args.min_epochs:
+      if epoch >= args.min_epochs:
         args.decay = 1
     if args.decay == 1:
       args.lr = args.lr*0.5      
       for param_group in optimizer.param_groups:
         param_group['lr'] = args.lr
-      if args.lr < 0.02:
+      if args.lr < 0.03:
         break
       
 def eval(data, model, meta_optimizer):
