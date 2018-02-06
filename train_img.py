@@ -39,7 +39,7 @@ parser.add_argument('--enc_layers', default=[64,64,64])
 parser.add_argument('--dec_kernel_size', default=[9,9,9,7,7,7,5,5,5,3,3,3], type=int)
 parser.add_argument('--dec_layers', default=[32,32,32,32,32,32,32,32,32,32,32,32])
 parser.add_argument('--latent_feature_map', default=4, type=int)
-parser.add_argument('--model', default='savi', type=str, choices = ['vae', 'autoreg', 'savi', 'svi'])
+parser.add_argument('--model', default='savae', type=str, choices = ['vae', 'autoreg', 'savae', 'svi'])
 parser.add_argument('--train_kl', default=1, type=int)
 parser.add_argument('--train_n2n', default=1, type=int)
 parser.add_argument('--acc_param_grads', default=1, type=int)
@@ -182,7 +182,7 @@ def main(args):
           vae_loss = nll_vae + args.beta*kl_vae          
           vae_loss.backward(retain_graph = True)
           
-        if args.model == 'savi':
+        if args.model == 'savae':
           var_params = torch.cat([mean, logvar], 1)        
           mean_svi = Variable(mean.data, requires_grad = True)
           logvar_svi = Variable(logvar.data, requires_grad = True)
@@ -241,7 +241,7 @@ def main(args):
         'optimizer': optimizer,
         'loss_stats': loss_stats
       }
-      print('Saving checkpoint to %s' % args.checkpoint_path)
+      print('Savaeng checkpoint to %s' % args.checkpoint_path)
       torch.save(checkpoint, args.checkpoint_path)
         
     
@@ -280,7 +280,7 @@ def eval(data, model, meta_optimizer):
       total_nll_vae += nll_vae.data[0]*batch_size
       kl_vae = utils.kl_loss_diag(mean, logvar)
       total_kl_vae += kl_vae.data[0]*batch_size
-      if args.model == 'savi':
+      if args.model == 'savae':
         mean_svi = Variable(mean.data, requires_grad = True)
         logvar_svi = Variable(logvar.data, requires_grad = True)
         var_params_svi = meta_optimizer.forward([mean_svi, logvar_svi], img)
@@ -308,7 +308,7 @@ def eval(data, model, meta_optimizer):
     return nll_autoreg
   elif args.model == 'vae':
     return nll_bound_vae
-  elif args.model == 'savi' or args.model == 'svi':
+  elif args.model == 'savae' or args.model == 'svi':
     return nll_bound_svi
 
 

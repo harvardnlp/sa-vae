@@ -41,7 +41,7 @@ parser.add_argument('--dec_word_dim', default=512, type=int)
 parser.add_argument('--dec_h_dim', default=1024, type=int)
 parser.add_argument('--dec_num_layers', default=1, type=int)
 parser.add_argument('--dec_dropout', default=0.5, type=float)
-parser.add_argument('--model', default='savi', type=str, choices = ['vae', 'autoreg', 'savi', 'svi'])
+parser.add_argument('--model', default='savae', type=str, choices = ['vae', 'autoreg', 'savae', 'svi'])
 parser.add_argument('--train_n2n', default=1, type=int)
 parser.add_argument('--train_kl', default=1, type=int)
 parser.add_argument('--acc_param_grads', default=1, type=int)
@@ -191,7 +191,7 @@ def main(args):
         if args.model == 'vae':
           vae_loss = nll_vae + args.beta*kl_vae          
           vae_loss.backward(retain_graph = True)
-        if args.model == 'savi':
+        if args.model == 'savae':
           var_params = torch.cat([mean, logvar], 1)        
           mean_svi = Variable(mean.data, requires_grad = True)
           logvar_svi = Variable(logvar.data, requires_grad = True)
@@ -253,7 +253,7 @@ def main(args):
         'model': model,
         'val_stats': val_stats
       }
-      print('Saving checkpoint to %s' % args.checkpoint_path)      
+      print('Savaeng checkpoint to %s' % args.checkpoint_path)      
       torch.save(checkpoint, args.checkpoint_path)
       model.cuda()
     else:
@@ -308,7 +308,7 @@ def eval(data, model, meta_optimizer):
       total_nll_vae += nll_vae.data[0]*batch_size
       kl_vae = utils.kl_loss_diag(mean, logvar)
       total_kl_vae += kl_vae.data[0]*batch_size        
-      if args.model == 'savi':
+      if args.model == 'savae':
         mean_svi = Variable(mean.data, requires_grad = True)
         logvar_svi = Variable(logvar.data, requires_grad = True)
         var_params_svi = meta_optimizer.forward([mean_svi, logvar_svi], sents)
@@ -334,7 +334,7 @@ def eval(data, model, meta_optimizer):
     return ppl_autoreg
   elif args.model == 'vae':
     return ppl_bound_vae
-  elif args.model == 'savi' or args.model == 'svi':
+  elif args.model == 'savae' or args.model == 'svi':
     return ppl_bound_svi
 
 if __name__ == '__main__':

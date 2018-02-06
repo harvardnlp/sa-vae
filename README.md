@@ -1,4 +1,4 @@
-# Semi-Amortized Variational Inference
+# Semi-Amortized Variational Autoencoders
 
 ## Dependencies
 The code was tested in `python 3.6` and `pytorch 0.2`. We also require the `h5py` package.
@@ -32,9 +32,9 @@ To train the various models, add the following:
 - Autoregressive (i.e. language model): `--model autoreg`  
 - VAE: `--model vae`  
 - SVI: `--model svi --svi_steps 20 --acc_param_grads 0`  
-- VAE+SVI: `--model savi --svi_steps 20 --train_n2n 0 --train_kl 0 --acc_param_grads 0`  
-- VAE+SVI+KL: `--model savi --svi_steps 20 --train_n2n 0 --train_kl 1 --acc_param_grads 0`  
-- SAVI: `--model savi --svi_steps 20 --train_n2n 1 --acc_param_grads 1`  
+- VAE+SVI: `--model savae --svi_steps 20 --train_n2n 0 --train_kl 0 --acc_param_grads 0`  
+- VAE+SVI+KL: `--model savae --svi_steps 20 --train_n2n 0 --train_kl 1 --acc_param_grads 0`  
+- SA-VAE: `--model savae --svi_steps 20 --train_n2n 1 --acc_param_grads 1`  
 
 Number of SVI steps can be changed with the `--svi_steps` command. 
 
@@ -59,9 +59,9 @@ To train the various models, add the following:
 - Autoregressive (i.e. Gated PixelCNN): `--model autoreg`  
 - VAE: `--model vae`  
 - SVI: `--model svi --svi_steps 20 --acc_param_grads 0`  
-- VAE+SVI: `--model savi --svi_steps 20 --train_n2n 0 --train_kl 0 --acc_param_grads 0`    
-- VAE+SVI+KL: `--model savi --svi_steps 20 --train_n2n 0 --train_kl 1 --acc_param_grads 0`  
-- SAVI: `--model savi --svi_steps 20 --train_n2n 1 --acc_param_grads 1`  
+- VAE+SVI: `--model savae --svi_steps 20 --train_n2n 0 --train_kl 0 --acc_param_grads 0`    
+- VAE+SVI+KL: `--model savae --svi_steps 20 --train_n2n 0 --train_kl 1 --acc_param_grads 0`  
+- SA-VAE: `--model savae --svi_steps 20 --train_n2n 1 --acc_param_grads 1`  
 
 To evaluate, run
 ```

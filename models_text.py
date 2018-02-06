@@ -17,14 +17,14 @@ class RNNVAE(nn.Module):
                dec_num_layers = 1,
                dec_dropout = 0.5,
                latent_dim=32,
-               mode='savi'):
+               mode='savae'):
     super(RNNVAE, self).__init__()
     self.enc_h_dim = enc_h_dim
     self.enc_num_layers = enc_num_layers
     self.dec_h_dim =dec_h_dim
     self.dec_num_layers = dec_num_layers
     
-    if mode == 'savi' or mode == 'vae':
+    if mode == 'savae' or mode == 'vae':
       self.enc_word_vecs = nn.Embedding(vocab_size, enc_word_dim)
       self.latent_linear_mean = nn.Linear(enc_h_dim, latent_dim)
       self.latent_linear_logvar = nn.Linear(enc_h_dim, latent_dim)
