@@ -1,4 +1,7 @@
 # Semi-Amortized Variational Autoencoders
+Code for the paper:  
+[Semi-Amortized Variational Autoencoders](https://arxiv.org/pdf/1802.02550.pdf)  
+Yoon Kim, Sam Wiseman, Andrew Miller, David Sontag, Alexander Rush
 
 ## Dependencies
 The code was tested in `python 3.6` and `pytorch 0.2`. We also require the `h5py` package.
