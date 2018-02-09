@@ -44,7 +44,6 @@ parser.add_argument('--dec_dropout', default=0.5, type=float)
 parser.add_argument('--model', default='savae', type=str, choices = ['vae', 'autoreg', 'savae', 'svi'])
 parser.add_argument('--train_n2n', default=1, type=int)
 parser.add_argument('--train_kl', default=1, type=int)
-parser.add_argument('--acc_param_grads', default=1, type=int)
 
 # Optimization options
 parser.add_argument('--checkpoint_path', default='baseline.pt')
@@ -124,7 +123,7 @@ def main(args):
   meta_optimizer = OptimN2N(variational_loss, model, update_params, eps = args.eps, 
                             lr = [args.svi_lr1, args.svi_lr2],
                             iters = args.svi_steps, momentum = args.momentum,
-                            acc_param_grads= args.acc_param_grads == 1,  
+                            acc_param_grads= args.train_n2n == 1,  
                             max_grad_norm = args.svi_max_grad_norm)
   if args.test == 1:
     args.beta = 1

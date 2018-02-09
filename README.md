@@ -34,10 +34,10 @@ where `model-path` is the path to save the best model and the `*.hdf5` files are
 To train the various models, add the following:  
 - Autoregressive (i.e. language model): `--model autoreg`  
 - VAE: `--model vae`  
-- SVI: `--model svi --svi_steps 20 --acc_param_grads 0`  
-- VAE+SVI: `--model savae --svi_steps 20 --train_n2n 0 --train_kl 0 --acc_param_grads 0`  
-- VAE+SVI+KL: `--model savae --svi_steps 20 --train_n2n 0 --train_kl 1 --acc_param_grads 0`  
-- SA-VAE: `--model savae --svi_steps 20 --train_n2n 1 --acc_param_grads 1`  
+- SVI: `--model svi --svi_steps 20 --train_n2n 0`  
+- VAE+SVI: `--model savae --svi_steps 20 --train_n2n 0 --train_kl 0`  
+- VAE+SVI+KL: `--model savae --svi_steps 20 --train_n2n 0 --train_kl 1`  
+- SA-VAE: `--model savae --svi_steps 20 --train_n2n 1`  
 
 Number of SVI steps can be changed with the `--svi_steps` command. 
 
@@ -61,15 +61,16 @@ python train_img.py --data_file data/omniglot/omniglot.pt --gpu 1 --checkpoint_p
 To train the various models, add the following:  
 - Autoregressive (i.e. Gated PixelCNN): `--model autoreg`  
 - VAE: `--model vae`  
-- SVI: `--model svi --svi_steps 20 --acc_param_grads 0`  
-- VAE+SVI: `--model savae --svi_steps 20 --train_n2n 0 --train_kl 0 --acc_param_grads 0`    
-- VAE+SVI+KL: `--model savae --svi_steps 20 --train_n2n 0 --train_kl 1 --acc_param_grads 0`  
-- SA-VAE: `--model savae --svi_steps 20 --train_n2n 1 --acc_param_grads 1`  
+- SVI: `--model svi --svi_steps 20`  
+- VAE+SVI: `--model savae --svi_steps 20 --train_n2n 0 --train_kl 0`    
+- VAE+SVI+KL: `--model savae --svi_steps 20 --train_n2n 0 --train_kl 1`  
+- SA-VAE: `--model savae --svi_steps 20 --train_n2n 1`  
 
 To evaluate, run
 ```
 python train_img.py --train_from model-path --test 1 --gpu 1
 ```
+Make sure the append the relevant model configuration at test time too.
 
 ## Acknowledgements
 Some of our code is based on [VAE with a VampPrior](https://github.com/jmtomczak/vae_vampprior).
